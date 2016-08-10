@@ -1,0 +1,14 @@
+f:\documents\visual studio 2015\Projects\Netil\Netil\bin\Debug\Netil.exe.config
+f:\documents\visual studio 2015\Projects\Netil\Netil\bin\Debug\Netil.exe
+f:\documents\visual studio 2015\Projects\Netil\Netil\bin\Debug\Netil.pdb
+f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\Netil.csprojResolveAssemblyReference.cache
+f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\MainWindow.g.cs
+f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\App.g.cs
+f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\Netil_MarkupCompile.cache
+f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\Netil_MarkupCompile.lref
+f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\MainWindow.baml
+f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\Netil.g.resources
+f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\Netil.Properties.Resources.resources
+f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\Netil.csproj.GenerateResource.Cache
+f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\Netil.exe
+f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\Netil.pdb
