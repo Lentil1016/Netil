@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Media.Animation;
+using Netil.Helper;
 
 
 namespace Netil
@@ -26,12 +19,11 @@ namespace Netil
         public MainWindow()
         {
             InitializeComponent();
+            List<PipeElement> PiplineList = new List<PipeElement>();
+            this.PipeLineBox.ItemsSource = PiplineList;
+            PiplineList.Add(new TestHelper());
+            PiplineList.Add(new StringHelper());
         }
-
-        /// <summary>
-        /// 提取Url的正则表达式
-        /// </summary>
-        private Regex WebUrlRegex = new Regex(@"^(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?");
 
         /// <summary>
         /// 开始爬取
@@ -39,8 +31,8 @@ namespace Netil
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             Start.IsEnabled = false;
-            string Urls = UrlsTextBox.Text;
-            WebUrlRegex.Matches(Urls);
+            List<string> Urls = WebHelper.GetUrlsList(UrlsTextBox.Text);
+            //foreach (string Url in Urls)
         }
 
         private void LockDomain_Changed(object sender, RoutedEventArgs e)
@@ -50,53 +42,11 @@ namespace Netil
         }
 
         #region 页面调整动效
+
         private bool IsExpanded = false;//TextBox是否已经展开的标志
 
-        //Double类型Back缓动收缩动画
-        private DoubleAnimation BackShrink = new DoubleAnimation()
-        {
-            Duration = TimeSpan.FromSeconds(0.3),//动画持续时间为0.3秒
-            By = -60,//收缩量
-            BeginTime = TimeSpan.FromSeconds(0.05),//延迟量
-            EasingFunction = new BackEase { EasingMode = EasingMode.EaseOut }//缓动函数设置，详情参见MSDN关于缓动函数的文档：https://msdn.microsoft.com/zh-cn/library/ee308751(v=vs.110).aspx
-        };
-
-        //Double类型Back缓动扩展动画
-        private DoubleAnimation BackExpand = new DoubleAnimation()
-        {
-            Duration = TimeSpan.FromSeconds(0.3),//动画持续时间为0.3秒
-            By = 60,//扩展量
-            EasingFunction = new BackEase { EasingMode = EasingMode.EaseOut }//缓动函数设置
-        };
-
-        //Double类型Cubic缓动收缩动画
-        private DoubleAnimation CubicShrink = new DoubleAnimation()
-        {
-            Duration = TimeSpan.FromSeconds(0.3),//动画持续时间为0.3秒
-            By = -60,//收缩量
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }//缓动函数设置
-        };
-
-        //Double类型Cubic缓动扩展动画
-        private DoubleAnimation CubicExpand = new DoubleAnimation()
-        {
-            Duration = TimeSpan.FromSeconds(0.3),//动画持续时间为0.3秒
-            By = 60,//扩展量
-            BeginTime = TimeSpan.FromSeconds(0.1),//延迟量
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }//缓动函数设置
-        };
-
-        //Double类型Cubic扩展动画
-        private DoubleAnimation CubicFollow = new DoubleAnimation()
-        {
-            Duration = TimeSpan.FromSeconds(0.5),//跟踪灵敏度
-            BeginTime = TimeSpan.FromSeconds(0.1),//信号消抖
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }//缓动函数设置
-        };
-        
-
         /// <summary>
-        /// 在MainUrl文本框中改变文本触发
+        /// 在MainUrl文本框中改变文本触发，用于实现文本框的伸缩。
         /// </summary>
         private void MainUrl_Changed(object sender, TextChangedEventArgs e)
         {
@@ -105,8 +55,8 @@ namespace Netil
                 if (!IsExpanded)
                 {
                     IsExpanded = true;
-                    this.UrlGroup.BeginAnimation(GroupBox.HeightProperty, BackExpand);
-                    this.MainPanelGrid.BeginAnimation(Grid.HeightProperty, BackShrink);
+                    this.UrlGroup.BeginAnimation(GroupBox.HeightProperty, AnimateHelper.BackExpand);
+                    this.MainPanelGrid.BeginAnimation(Grid.HeightProperty, AnimateHelper.BackShrink);
                 }
             }
             else
@@ -114,23 +64,37 @@ namespace Netil
                 if (IsExpanded)
                 {
                     IsExpanded = false;
-                    this.UrlGroup.BeginAnimation(GroupBox.HeightProperty, CubicShrink);
-                    this.MainPanelGrid.BeginAnimation(Grid.HeightProperty, CubicExpand);
+                    this.UrlGroup.BeginAnimation(GroupBox.HeightProperty, AnimateHelper.CubicShrink);
+                    this.MainPanelGrid.BeginAnimation(Grid.HeightProperty, AnimateHelper.CubicExpand);
                 }
             }
         }
 
+        /// <summary>
+        /// MainWindow的SizeChanged事件函数，用于动态调整控件大小
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Refresh(object sender, SizeChangedEventArgs e)
         {
-            CubicFollow.To = this.ActualHeight - Convert.ToDouble(IsExpanded) * 60 - 75 - 31;
-            MainPanelGrid.BeginAnimation(Grid.HeightProperty, CubicFollow);
+            AnimateHelper.CubicFollow.To = this.ActualHeight - Convert.ToDouble(IsExpanded) * 60 - 75 - 31;
+            MainPanelGrid.BeginAnimation(Grid.HeightProperty, AnimateHelper.CubicFollow);
         }
 
-        private void Render(object sender, EventArgs e)
+        /// <summary>
+        /// MainWindow的Initialized事件函数，用于在窗体初始化完成后为动态背景方法创建线程
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BgRender(object sender, EventArgs e)
         {
             var ignore_me = RenderAsync();//To avoid the CS4014 Warning http://stackoverflow.com/questions/22629951/suppressing-warning-cs4014-because-this-call-is-not-awaited-execution-of-the
         }
 
+        /// <summary>
+        /// 实现了动态背景的方法，异步执行一次即可循环变换背景。
+        /// </summary>
+        /// <returns>Microsoft不建议在Async方法中使用Void返回值，由于此方法为Fire and ignore，因此Task返回值实际并没有作用</returns>
         private async Task RenderAsync()
         {
             //Double类型Cubic扩展动画
@@ -159,5 +123,10 @@ namespace Netil
         }
 
         #endregion
+
+        private void PipeLine_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

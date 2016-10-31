@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Netil"
+        xmlns:Helper="clr-namespace:Netil.Helper"
         Icon="Toolbox.ico"
         mc:Ignorable="d"
-        Title="Netil" Height="600" Width="720" MinHeight="500" MinWidth="600" FontFamily="微软雅黑" Initialized="Render" >
+        Title="Netil" Height="600" Width="720" MinHeight="500" MinWidth="600" FontFamily="微软雅黑" Initialized="BgRender" >
 
     <Window.Resources>
         <Style TargetType="StackPanel">
@@ -20,6 +21,7 @@
             <Setter Property="Margin" Value="5"></Setter>
         </Style>
     </Window.Resources>
+
     <Window.Background>
         <LinearGradientBrush>
             <LinearGradientBrush.StartPoint>
@@ -43,9 +45,9 @@
             </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
     </Window.Background>
-    
+
     <Grid Name="grid" SizeChanged="Refresh">
-        
+
         <GroupBox x:Name="UrlGroup" Header="请输入网址" Height="65" VerticalAlignment="Top" Margin="5,5,5,0" >
             <Grid x:Name="UrlGrid">
                 <Grid.ColumnDefinitions>
@@ -93,7 +95,7 @@
                 </StackPanel>
             </Grid>
         </GroupBox>
-        
+
         <Grid Name="MainPanelGrid" Height="494" VerticalAlignment="Bottom">
             <Grid.Resources>
                 <Style TargetType="ListBox">
@@ -108,19 +110,35 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <GroupBox Name="SearchGroup" Header="解析设置" Grid.Column="0" Grid.Row="0">
-                <Grid></Grid>
-            </GroupBox>
-            <GroupBox Name="DowloadGroup" Header="下载设置" Grid.Column="1" Grid.Row="0">
-                <Grid></Grid>
+            <GroupBox Name="DowloadGroup" Header="下载设置" Grid.ColumnSpan="2" Grid.Row="0" Margin="5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="140"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <ListView Name="PipeLineBox" Margin="5" Grid.ColumnSpan="3" SelectionChanged="PipeLine_SelectionChanged">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                    <Button x:Name="AddFTPRule" Content="添加文件保存规则" Margin="5" Height="20" Grid.Row="1" Grid.Column="2"/>
+                    <Button x:Name="AddInfRule" Content="添加字符串保存规则" Margin="5" Height="20" Grid.Row="1" Grid.Column="1"/>
+                </Grid>
             </GroupBox>
             <GroupBox Name="UrlListGroup" Header="已解析的Url"  Grid.Column="0" Grid.Row="1">
-                <ListBox></ListBox>
+                <ListBox Background="#b1dffd"></ListBox>
             </GroupBox>
             <GroupBox Name="ImgListGroup" Header="已下载的文件"  Grid.Column="1" Grid.Row="1">
-                <ListBox></ListBox>
+                <ListBox Background="#b1dffd"></ListBox>
             </GroupBox>
         </Grid>
-        
+
     </Grid>
 </Window>

@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-f:\documents\visual studio 2015\Projects\Netil\Netil\obj\Debug\
+F:\Documents\Visual Studio 2015\Projects\Netil\Netil\obj\Debug\
 Netil
 none
 false
 DEBUG;TRACE
-f:\documents\visual studio 2015\Projects\Netil\Netil\App.xaml
-11151548125
+F:\Documents\Visual Studio 2015\Projects\Netil\Netil\App.xaml
+3-1033139553
 
-9-408092873
-13738642453
-MainWindow.xaml;
+16487967097
+15767094614
+Helper\PipeElement.xaml;Helper\TestHelper.xaml;MainWindow.xaml;
 
-True
+False
 
