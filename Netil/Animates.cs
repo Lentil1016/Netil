@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Animation;
 
-namespace Netil.Helper
+namespace Netil
 {
-    static class AnimateHelper
+    static class Animates
     {
         //Double类型Back缓动收缩动画
         static public DoubleAnimation BackShrink = new DoubleAnimation()

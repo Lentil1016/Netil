@@ -66,38 +66,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Helper\PipeElement.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Helper\TestHelper.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Helper\AnimateHelper.cs" />
+    <Compile Include="core.cs" />
+    <Compile Include="Animates.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Helper\BloomFilter.cs" />
     <Compile Include="Helper\HttpHelper.cs" />
-    <Compile Include="Helper\PipeElement.xaml.cs">
-      <DependentUpon>PipeElement.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Helper\InformHelper.cs" />
+    <Compile Include="Pipeline\FilePipe.cs" />
+    <Compile Include="Pipeline\MsgPipe.cs" />
+    <Compile Include="Pipeline\Pipe.cs" />
+    <Compile Include="Pipeline\Pipeline.cs" />
     <Compile Include="Helper\StringHelper.cs" />
-    <Compile Include="Helper\TestHelper.xaml.cs">
-      <DependentUpon>TestHelper.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Helper\WebHelper.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pipeline\UrlPipe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

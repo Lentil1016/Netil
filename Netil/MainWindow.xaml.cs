@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using Netil.Helper;
 
 
 namespace Netil
@@ -19,10 +18,6 @@ namespace Netil
         public MainWindow()
         {
             InitializeComponent();
-            List<PipeElement> PiplineList = new List<PipeElement>();
-            this.PipeLineBox.ItemsSource = PiplineList;
-            PiplineList.Add(new TestHelper());
-            PiplineList.Add(new StringHelper());
         }
 
         /// <summary>
@@ -31,7 +26,6 @@ namespace Netil
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             Start.IsEnabled = false;
-            List<string> Urls = WebHelper.GetUrlsList(UrlsTextBox.Text);
             //foreach (string Url in Urls)
         }
 
@@ -55,8 +49,8 @@ namespace Netil
                 if (!IsExpanded)
                 {
                     IsExpanded = true;
-                    this.UrlGroup.BeginAnimation(GroupBox.HeightProperty, AnimateHelper.BackExpand);
-                    this.MainPanelGrid.BeginAnimation(Grid.HeightProperty, AnimateHelper.BackShrink);
+                    this.UrlGroup.BeginAnimation(GroupBox.HeightProperty, Animates.BackExpand);
+                    this.MainPanelGrid.BeginAnimation(Grid.HeightProperty, Animates.BackShrink);
                 }
             }
             else
@@ -64,8 +58,8 @@ namespace Netil
                 if (IsExpanded)
                 {
                     IsExpanded = false;
-                    this.UrlGroup.BeginAnimation(GroupBox.HeightProperty, AnimateHelper.CubicShrink);
-                    this.MainPanelGrid.BeginAnimation(Grid.HeightProperty, AnimateHelper.CubicExpand);
+                    this.UrlGroup.BeginAnimation(GroupBox.HeightProperty, Animates.CubicShrink);
+                    this.MainPanelGrid.BeginAnimation(Grid.HeightProperty, Animates.CubicExpand);
                 }
             }
         }
@@ -77,8 +71,8 @@ namespace Netil
         /// <param name="e"></param>
         private void Refresh(object sender, SizeChangedEventArgs e)
         {
-            AnimateHelper.CubicFollow.To = this.ActualHeight - Convert.ToDouble(IsExpanded) * 60 - 75 - 31;
-            MainPanelGrid.BeginAnimation(Grid.HeightProperty, AnimateHelper.CubicFollow);
+            Animates.CubicFollow.To = this.ActualHeight - Convert.ToDouble(IsExpanded) * 60 - 75 - 31;
+            MainPanelGrid.BeginAnimation(Grid.HeightProperty, Animates.CubicFollow);
         }
 
         /// <summary>
@@ -88,7 +82,7 @@ namespace Netil
         /// <param name="e"></param>
         private void BgRender(object sender, EventArgs e)
         {
-            var ignore_me = RenderAsync();//To avoid the CS4014 Warning http://stackoverflow.com/questions/22629951/suppressing-warning-cs4014-because-this-call-is-not-awaited-execution-of-the
+            var FireAndIgnore = RenderAsync();//To avoid the CS4014 Warning http://stackoverflow.com/questions/22629951/suppressing-warning-cs4014-because-this-call-is-not-awaited-execution-of-the
         }
 
         /// <summary>
