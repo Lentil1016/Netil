@@ -8,7 +8,7 @@ namespace Netil.Helper
 {
     static class InformHelper
     {
-        public static void SendMessage(string msg)
+        public static void SendMessage(string msg,string color)
         {
             
         }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.IO;
 using System.Net;
+using System.Threading;
 
 namespace Netil.Helper
 {
@@ -23,19 +24,35 @@ namespace Netil.Helper
         /// </summary>
         /// <param name="URL">请求的地址</param>
         /// <returns></returns>
-        public string GETResponse(Uri URL)
+        public static bool GETResponse(string URL,out string content)
         {
             HttpWebRequest Request = (HttpWebRequest)HttpWebRequest.Create(URL);
-            Request.CookieContainer = Cookies;
+            //Request.CookieContainer = Cookies;//TODO: MT_CookieContainer
             Request.UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko";
             Request.Accept = "text/html, application/xhtml+xml, */*";
+            Request.Timeout = 2000;
             Request.ContentType = "application/x-www-form-urlencoded";
             Request.Method = "GET";
-
-            HttpWebResponse Response = (HttpWebResponse)Request.GetResponse();
-            using (Stream responsestream = Response.GetResponseStream())
-            using (StreamReader sr = new StreamReader(responsestream, System.Text.Encoding.UTF8))
-                return sr.ReadToEnd();
+            
+            bool flag = false;//标志content是否获取成功
+            int retry = 0;
+            content = "";
+            while (retry<3)
+            {
+                try
+                {
+                    Console.WriteLine("重试" + retry);
+                    using (StreamReader sr = new StreamReader(((HttpWebResponse)Request.GetResponse()).GetResponseStream(), System.Text.Encoding.UTF8))
+                        content = sr.ReadToEnd();
+                    flag = true;//代码执行到这里意味着content获取成功
+                }
+                catch (WebException)//响应超时，重试两次后放弃。
+                {
+                    retry++;
+                    Request.Timeout *= 2;//响应时间翻倍
+                }
+            }
+            return flag;
         }
         /// <summary>
         /// 以Stream返回向URL POST消息所得到的响应
@@ -69,11 +86,6 @@ namespace Netil.Helper
 
         #region Attributes
         private bool IsCookiesSaved { get; set; } = true;
-        #endregion
-
-        #region variables
-        private CookieContainer Cookies;
-        private HttpClient Client = new HttpClient();
         #endregion
     }
 }

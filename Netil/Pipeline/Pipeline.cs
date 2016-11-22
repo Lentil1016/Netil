@@ -1,66 +1,131 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using Netil.Helper;
+using System.Threading.Tasks;
+using System.Threading;
+
+/*pipeline主要负责数据的调度工作，而各段pipe只负责数据的下载和提取操作
+ * 也即pipe就像工厂中的工位，只负责根据给定的规则进行数据生产
+ * 而pipeline就像工厂中的物流系统，负责为pipe下达生产任务，并将pipe产出的数据资源进行归档和再分配。
+ * pipe主动提取订单，主动送回产品，需要为特定OrderManager加锁，送回时还需锁布隆过滤器12222222
+*/
 
 namespace Netil.Pipeline
 {
+
+    #region delegates
+    delegate void enqueue_handle(List<string> EnqueueOrders);
+    delegate void enqueue_index_handle(string EnqueueKey,List<string> EnqueueOrders );
+    #endregion
+
     class pipeline
     {
+        #region constructor
         public pipeline()
         {
-            Storage["Old_RootUrl"] = new List<string>();
+            EnqueueDictHandle = new enqueue_index_handle(EnqueueOrders);
+        }
+        #endregion
+
+        #region method
+        /// <summary>
+        /// 通过UI向Pipeline添加一个处理单元
+        /// </summary>
+        /// <param name="RequestedPack"></param>
+        /// <param name="OutputPack"></param>
+        /// <param name="CheckRules"></param>
+        /// <param name="MsgRules"></param>
+        /// <param name="FileRules"></param>
+        /// <param name="DownloadRules"></param>
+        /// <param name="WorkerCount"></param>
+        /// <returns></returns>
+        public void AddPipe(Pipe NewPipe)
+        {
+            NewPipe.Online(EnqueueDictHandle);//为传入的新Pipe添加订单分发函数的委托，并将其需求的订单加入到分发委托中
+            _pipeline.Add(NewPipe);
         }
 
-        public bool AddPipe(string PackName,Dictionary<string,Regex> RuleList,string PipeType)
+        public void Pre_Operating(List<string> RequestList)
         {
-            if (NameList.Contains(PackName))
-            {
-                foreach (string NewPackName in RuleList.Keys)
-                    if (!NameList.Contains(NewPackName))
-                    {
-                        NameList.Add(NewPackName);
-                        Storage[NewPackName] = new List<string>();
-                        Storage_Loker[NewPackName] = new object();
-                    }
-                _pipeline.Add(new UrlPipe(this, PackName, RuleList));
+            var DistList = RequestList.Distinct();//创建一个无重复版本的RequestList
+            foreach (string Name in DistList)
+                EnqueueHandlesDict[Name] = new enqueue_handle(PreDelegate);//添加多重委托前需要初始化委托，这里使用一个无用的空函数
+            for (int i=0;i<RequestList.Count;i++)
+                EnqueueHandlesDict[RequestList[i]] += _pipeline[i].Enqueue;//将RequestList中元素对应的Pipe的Dequeue方法添加进多重委托
+            foreach (string Name in DistList)
+                EnqueueHandlesDict[Name] -= PreDelegate;//将初始化构造用的空函数去掉
+        }
+
+        /// <summary>
+        /// 传入Init表单，开始迭代生产
+        /// </summary>
+        /// <param name="OperatedURL">初始的Url列表</param>
+        /// <returns></returns>
+        public bool Operating(List<string> InitOrders)
+        {
+            EnqueueOrders("InitOrders", InitOrders);
+            if (Parallel.ForEach(_pipeline, new ParallelOptions { CancellationToken = CTS.Token }, (pipe) => { pipe.proccessing(); }).IsCompleted)
                 return true;
-            }
             else
                 return false;
         }
-        /// <summary>
-        /// 对指定RootUrl进行一次迭代，返回迭代过程中更新的RootUrl_List
-        /// </summary>
-        /// <param name="OperatedURL">要进行迭代的Url</param>
-        /// <returns></returns>
-        public List<string> Operating(string OperatedURL)
-        {
-            Storage["Old_RootUrl"].Add(OperatedURL);
-            //operating
 
-            return Storage["RootUrl"];
+        /// <summary>
+        /// 订单分发函数
+        /// </summary>
+        /// <param name="QueryKey">所要提取的订单名</param>
+        /// <returns></returns>
+        public void EnqueueOrders(string EnqueueKey,List<string> Orders)
+        {
+            EnqueueHandlesDict[EnqueueKey](Orders);
         }
 
-        public static bool QueryUrl(string URL)
+
+        #endregion
+
+        #region Private_method
+
+        /// <summary>
+        /// 仅用于初始化多重委托的空函数
+        /// </summary>
+        /// <param name="Trivial">如其名，无用</param>
+        private void PreDelegate(List<string> Trivial)
+        {
+            //Do Nothing
+        }
+
+        /// <summary>
+        /// 查询某Url是否已经在订单中排队或被处理
+        /// </summary>
+        /// <param name="URL">要查询的Url</param>
+        /// <returns></returns>
+        private bool QueryUrl(string URL)
         {
             if (!B_Filter.Contains(URL))
+            {
                 B_Filter.Add(URL);
+                return true;//not exist
+            }
             else
                 return false;//exist
-            return true;//not exist
+
         }
 
-        private List<string> NameList = new List<string>();
-        private Dictionary<string, List<string>> PagesCache = new Dictionary<string, List<string>>();//用于存放页面缓存
-        private Dictionary<string, object> PagesCache_Loker = new Dictionary<string, object>();//页面缓存具名锁
-        private Dictionary<string, List<string>> Storage = new Dictionary<string, List<string>>();//用于为PiplLine管理资源包
-        private Dictionary<string, object> Storage_Loker = new Dictionary<string, object>();//资源包具名锁
-        private List<Pipe> _pipeline;//管线List
-        private static object BloomLoker = new object();
-        private static BloomFilter<System.String> B_Filter = new BloomFilter<string>(100, 1000);//布隆过滤器
+        #endregion
+
+        #region Attribute
+        public static CancellationTokenSource CTS { get; } = new CancellationTokenSource();//全局子线程取消标识
+        #endregion
+
+        #region variables
+        private enqueue_index_handle EnqueueDictHandle;//订单分发函数委托
+        private Dictionary<string, enqueue_handle> EnqueueHandlesDict;//分发委托字典
+
+        private List<Pipe> _pipeline;//生产管线
+
+        private object BloomLoker = new object();//布隆过滤器锁
+        private BloomFilter<string> B_Filter = new BloomFilter<string>(100, 1000);//布隆过滤器
+        #endregion
     }
 }
