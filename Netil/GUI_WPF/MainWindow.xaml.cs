@@ -71,8 +71,9 @@ namespace Netil
         /// <param name="e"></param>
         private void Refresh(object sender, SizeChangedEventArgs e)
         {
-            Animates.CubicFollow.To = this.ActualHeight - Convert.ToDouble(IsExpanded) * 60 - 75 - 31;
-            MainPanelGrid.BeginAnimation(Grid.HeightProperty, Animates.CubicFollow);
+            MainPanelGrid.Height = this.ActualHeight - Convert.ToDouble(IsExpanded) * 60 - 75 - 31;
+            //Animates.CubicFollow.To = this.ActualHeight - Convert.ToDouble(IsExpanded) * 60 - 75 - 31;
+            //MainPanelGrid.BeginAnimation(Grid.HeightProperty, Animates.CubicFollow);
         }
 
         /// <summary>

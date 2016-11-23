@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;        
 using Netil.Helper;
 using System.Threading.Tasks;
 using System.Threading;
 
-/*pipeline主要负责数据的调度工作，而各段pipe只负责数据的下载和提取操作
+/*pipeline主要负责调度工作(多播委托、布隆过滤)，而各段pipe只负责数据的下载和提取操作
  * 也即pipe就像工厂中的工位，只负责根据给定的规则进行数据生产
- * 而pipeline就像工厂中的物流系统，负责为pipe下达生产任务，并将pipe产出的数据资源进行归档和再分配。
- * pipe主动提取订单，主动送回产品，需要为特定OrderManager加锁，送回时还需锁布隆过滤器12222222
+ * 而pipeline就像工厂中的物流系统，负责为pipe下达生产任务，并将pipe产出的数据资源进行再分配。
+ * pipe通过queue接收订单，通过调用委托送回产品
 */
 
 namespace Netil.Pipeline
@@ -32,20 +32,17 @@ namespace Netil.Pipeline
         /// <summary>
         /// 通过UI向Pipeline添加一个处理单元
         /// </summary>
-        /// <param name="RequestedPack"></param>
-        /// <param name="OutputPack"></param>
-        /// <param name="CheckRules"></param>
-        /// <param name="MsgRules"></param>
-        /// <param name="FileRules"></param>
-        /// <param name="DownloadRules"></param>
-        /// <param name="WorkerCount"></param>
-        /// <returns></returns>
+        /// <param name="NewPipe">欲添加进pipeline的pipe</param>
         public void AddPipe(Pipe NewPipe)
         {
-            NewPipe.Online(EnqueueDictHandle);//为传入的新Pipe添加订单分发函数的委托，并将其需求的订单加入到分发委托中
+            NewPipe.Online(EnqueueDictHandle);//为传入的新Pipe添加订单分发函数的委托
             _pipeline.Add(NewPipe);
         }
 
+        /// <summary>
+        /// 构造多播委托
+        /// </summary>
+        /// <param name="RequestList">各个pipe所请求的订单名PackName</param>
         public void Pre_Operating(List<string> RequestList)
         {
             var DistList = RequestList.Distinct();//创建一个无重复版本的RequestList
@@ -120,9 +117,9 @@ namespace Netil.Pipeline
 
         #region variables
         private enqueue_index_handle EnqueueDictHandle;//订单分发函数委托
-        private Dictionary<string, enqueue_handle> EnqueueHandlesDict;//分发委托字典
+        private Dictionary<string, enqueue_handle> EnqueueHandlesDict=new Dictionary<string, enqueue_handle>();//分发委托字典
 
-        private List<Pipe> _pipeline;//生产管线
+        private List<Pipe> _pipeline=new List<Pipe>();//生产管线
 
         private object BloomLoker = new object();//布隆过滤器锁
         private BloomFilter<string> B_Filter = new BloomFilter<string>(100, 1000);//布隆过滤器

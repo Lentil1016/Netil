@@ -69,7 +69,7 @@
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                      ScrollViewer.CanContentScroll="True">
                     <TextBox.Resources>
-                        <VisualBrush x:Key="HelpBrush" TileMode="None" Opacity="0.3" Stretch="None" AlignmentX="Left"  AlignmentY="top">
+                        <VisualBrush x:Key="HelpBrush" TileMode="None" Opacity="0.3" Stretch="None" AlignmentX="Left"  AlignmentY="Center">
                             <VisualBrush.Visual>
                                 <TextBlock Text="支持输入多行网址，回车符分隔"/>
                             </VisualBrush.Visual>

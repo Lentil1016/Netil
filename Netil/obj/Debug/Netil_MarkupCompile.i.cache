@@ -9,12 +9,12 @@ Netil
 none
 false
 DEBUG;TRACE
-F:\Documents\Visual Studio 2015\Projects\Netil\Netil\App.xaml
-11151548125
 
-20-2130798295
+2-1130282628
+
+18-1865010222
 15767094614
-MainWindow.xaml;
+GUI_WPF\App.xaml;GUI_WPF\MainWindow.xaml;
 
 False
 

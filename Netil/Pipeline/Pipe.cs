@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using Netil.Helper;
+using System.IO;
 
 namespace Netil.Pipeline
 {
@@ -41,6 +42,10 @@ namespace Netil.Pipeline
         #endregion
 
         #region method
+        /// <summary>
+        /// 使得Pipe的产出物能够被输出到Pileline，以进行后续的调度(多播委托)
+        /// </summary>
+        /// <param name="_EnqueueIndexHandle"></param>
         public void Online(enqueue_index_handle _EnqueueIndexHandle)
         {
             EnqueueIndexHandle = _EnqueueIndexHandle;//传入添加订单函数委托
@@ -56,21 +61,51 @@ namespace Netil.Pipeline
         #region MT_method_多线程方法
         private void Worker()
         {
-            while (!pipeline.CTS.IsCancellationRequested)
+            string content,Url;
+            Dictionary<string, List<string>> thread_stash = new Dictionary<string, List<string>>();//线程内缓存，每次while循环清空一次
+            int counter;
+
+            foreach (var rule in MsgRules)
+                thread_stash[rule.Key] = new List<string>();//初始化
+
+            while (!pipeline.CTS.IsCancellationRequested)//子线程结束标志判断
             {
-                string content;
-                if(HttpHelper.GETResponse(Dequeue(),out content))//提取一项Url并下载，锁OrderManager->解锁OrderManager
+                if(HttpHelper.GETResponse(Url=Dequeue(),out content))//提取一项Url并下载，锁OrderManager->解锁OrderManager
                 {
+                    Url=Path.GetDirectoryName(Url);
                     if (ContentCheck(content))//检查是否出现期待或不期待出现的内容
                     {
+                        //爬取信息阶段
+                        foreach(var Rule in MsgRules)//使用每条正则表达式对content进行匹配
+                        {
+                            foreach (Match match in Rule.Value.Matches(content))
+                                thread_stash[Rule.Key].Add(HttpHelper.CheckUrl(match.Groups[Rule.Key].Value,Url));//将每条匹配中的目标数据存入stash
+                        }
+
+                        //下载文件阶段
+                        Task FireAndIgnore;
+                        foreach (var Rule in DownloadRules)
+                            for (counter = 0; counter < thread_stash[Rule.Key].Count; counter++)
+                                FireAndIgnore  = HttpHelper.DowloadAsBinary(thread_stash[Rule.Key][counter],//To avoid the CS4014 Warning http://stackoverflow.com/questions/22629951/suppressing-warning-cs4014-because-this-call-is-not-awaited-execution-of-the
+                                    StringHelper.FilenameParser(Rule.Value, counter, thread_stash)) ;
+
+                        //保存数据表阶段
 
                     }
                 }
             }
         }
 
+        private bool ContentCheck(string content)
+        {
+            foreach (var CheckRule in CheckRules)
+                if (!CheckRule.Key == CheckRule.Value.IsMatch(content))
+                    return false;
+            return true;
+        }
+
         /// <summary>
-        /// 向订单缓冲区中加入订单
+        /// 由外部向订单缓冲区中加入订单
         /// </summary>
         /// <param name="Orders">欲加入缓冲区的订单</param>
         public void Enqueue(List<string> Orders)
@@ -91,24 +126,6 @@ namespace Netil.Pipeline
 
         #endregion
 
-        #region private_method
-        private bool ContentCheck(string content)
-        {
-            foreach(var CheckRule in CheckRules)
-                if (!CheckRule.Key == CheckRule.Value.IsMatch(content))
-                    return false;
-            return true;
-        }
-        private void SaveAsUrl()
-        {
-
-        }
-        private void SaveAsFile()
-        {
-
-        }
-        #endregion
-
         #region variables
         private object QueueLocker = new object();//订单队列锁
         private Queue<string> OrderQueue = new Queue<string>();//订单队列
@@ -124,7 +141,7 @@ namespace Netil.Pipeline
         private Dictionary<string, List<string>> FileRules;//key为文件保存路径文件名表达式，value为文件内包含数据包清单 
         private Dictionary<string, string> DownloadRules;//Key为Url数据包，value为保存路径文件名表达式
 
-        private object StationLock;
+        private object StationLock=new object();
         private Dictionary<string, List<string>> DataStation=new Dictionary<string, List<string>>();//用于保存该pipe段本身产出的数据资源
         #endregion
     }

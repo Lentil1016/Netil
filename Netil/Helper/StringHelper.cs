@@ -7,42 +7,48 @@ using System.Threading.Tasks;
 
 namespace Netil.Helper
 {
-    class StringHelper
+    static class StringHelper
     {
+        #region method
         /// <summary>
-        /// TODO:字符串转化为正则表达式前的前处理
+        /// 将文件路径中的":PackName"替换为Pack中的Msg
         /// </summary>
-        /// <param name="str">待处理的字符串</param>
+        /// <param name="path"></param>
+        /// <param name="counter"></param>
+        /// <param name="stash"></param>
         /// <returns></returns>
-        public string Pre_Proc(string str)
+        public static string FilenameParser(string path,int counter,Dictionary<string,List<string>> stash)
         {
-            //I wonder if there is any way better to surpport both RegExp and string? sincerely.
-            //My way is so dummmmmmmmmmmmmmmmmmmmmmmmm!
-            if (ConfigReg.IsMatch(str))
-            {
-                str=ConfigReg.Match(str).Groups["RegExp"].Value;
-            }
-            else if(ConfigStr.IsMatch(str))//将普通字符串转义为正则表达式，效率损失堪忧，不幸中的万幸是，这是一次性损失。
-            {
-                str.Replace(@"\", @"\\");
-                str.Replace(@"?", @"\?");
-                str.Replace(@"*", @"\*");
-                str.Replace(@"+", @"\+");
-                str.Replace(@".", @"\.");
-                str.Replace(@"^", @"\^");
-                str.Replace(@"$", @"\$");
-                str.Replace(@"|", @"\|");
-                str.Replace(@"(", @"\)");
-                str.Replace(@")", @"\)");
-                str.Replace(@"{", @"\{");
-                str.Replace(@"}", @"\}");
-                str.Replace(@"[", @"\[");
-                str.Replace(@"]", @"\]");
-            }
-            return str;
+            foreach (Match match in PackRegex.Matches(path))
+                path.Replace(match.Value, stash[match.Groups[1].Value][counter]);
+            return path;
         }
 
-        Regex ConfigStr = new Regex(@"[^\s\d\w]");
-        Regex ConfigReg = new Regex(@"^\/(?<RegExp>.*)\/g$");
+        /// <summary>
+        /// 字符串转化为正则表达式前的前处理
+        /// </summary>
+        /// <param name="str">待处理的字符串</param>
+        /// <returns>处理完成的字符串</returns>
+        public static string Pre_Proc(string str)
+        {
+            if (ConfigReg.IsMatch(str))
+            {
+                return ConfigReg.Match(str).Groups["RegExp"].Value;
+            }
+            else
+            {
+                var matches = ConfigStr.Matches(str) ;
+                for (int counter=matches.Count-1;counter>=0;counter--)
+                    str.Insert(matches[counter].Index,"\\");
+                return str;
+            }
+        }
+        #endregion
+
+        #region variable
+        private static Regex PackRegex = new Regex("\":(.*?)\"");
+        private static Regex ConfigStr = new Regex(@"[^\s\d\w]");
+        private static Regex ConfigReg = new Regex(@"^\/(?<RegExp>.*)\/g$");
+        #endregion
     }
 }

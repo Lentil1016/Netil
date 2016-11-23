@@ -42,7 +42,7 @@ namespace Netil
             BeginTime = TimeSpan.FromSeconds(0.1),//延迟量
             EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }//缓动函数设置
         };
-
+        /*
         //Double类型Cubic扩展动画
         static public DoubleAnimation CubicFollow = new DoubleAnimation()
         {
@@ -50,5 +50,6 @@ namespace Netil
             BeginTime = TimeSpan.FromSeconds(0.01),//信号消抖
             EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }//缓动函数设置
         };
+        */
     }
 }
