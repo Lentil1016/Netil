@@ -10,7 +10,7 @@ using Netil.Pipeline;
 
 namespace Netil
 {
-    class core
+    public class core
     {
         #region Constructor
 

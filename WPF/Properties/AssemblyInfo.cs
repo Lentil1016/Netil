@@ -7,11 +7,11 @@ using System.Windows;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Netil")]
+[assembly: AssemblyTitle("WPF")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Netil")]
+[assembly: AssemblyProduct("WPF")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -28,6 +28,17 @@ using System.Windows;
 //对以下 NeutralResourceLanguage 特性的注释。  更新
 //以下行中的“en-US”以匹配项目文件中的 UICulture 设置。
 
+//[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
+
+
+[assembly: ThemeInfo(
+    ResourceDictionaryLocation.None, //主题特定资源词典所处位置
+                                     //(当资源未在页面
+                                     //或应用程序资源字典中找到时使用)
+    ResourceDictionaryLocation.SourceAssembly //常规资源词典所处位置
+                                              //(当资源未在页面
+                                              //、应用程序或任何主题专用资源字典中找到时使用)
+)]
 
 
 // 程序集的版本信息由下列四个值组成: 

@@ -5,6 +5,14 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netil", "Netil\Netil.csproj", "{74C9EC70-A6B7-4B3A-961F-9E607F45C09A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Main", "Main\Main.csproj", "{551ED690-C61A-4989-B0BB-7BEC6ECD18C2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6C02B902-9775-4266-AF00-BC9DBA712F4E} = {6C02B902-9775-4266-AF00-BC9DBA712F4E}
+		{74C9EC70-A6B7-4B3A-961F-9E607F45C09A} = {74C9EC70-A6B7-4B3A-961F-9E607F45C09A}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF", "WPF\WPF.csproj", "{6C02B902-9775-4266-AF00-BC9DBA712F4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +23,14 @@ Global
 		{74C9EC70-A6B7-4B3A-961F-9E607F45C09A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74C9EC70-A6B7-4B3A-961F-9E607F45C09A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74C9EC70-A6B7-4B3A-961F-9E607F45C09A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{551ED690-C61A-4989-B0BB-7BEC6ECD18C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{551ED690-C61A-4989-B0BB-7BEC6ECD18C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{551ED690-C61A-4989-B0BB-7BEC6ECD18C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{551ED690-C61A-4989-B0BB-7BEC6ECD18C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C02B902-9775-4266-AF00-BC9DBA712F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C02B902-9775-4266-AF00-BC9DBA712F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C02B902-9775-4266-AF00-BC9DBA712F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C02B902-9775-4266-AF00-BC9DBA712F4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

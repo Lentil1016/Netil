@@ -1,0 +1,30 @@
+F:\Documents\Visual Studio 2015\Projects\Netil\Netil\WPF.dll.config
+F:\Documents\Visual Studio 2015\Projects\Netil\Netil\WPF.dll
+F:\Documents\Visual Studio 2015\Projects\Netil\Netil\WPF.pdb
+F:\Documents\Visual Studio 2015\Projects\Netil\Netil\bin\Debug\WPF.dll.config
+F:\Documents\Visual Studio 2015\Projects\Netil\Netil\bin\Debug\WPF.dll
+F:\Documents\Visual Studio 2015\Projects\Netil\Netil\bin\Debug\WPF.pdb
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\bin\Debug\WPF.dll.config
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\bin\Debug\WPF.dll
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\bin\Debug\WPF.pdb
+F:\bin\Debug\WPF.dll.config
+F:\bin\Debug\WPF.dll
+F:\bin\Debug\WPF.pdb
+F:\Documents\Visual Studio 2015\Projects\Netil\Main\WPF.dll
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\bin\Debug\WPF.dll.config
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\bin\Debug\WPF.dll
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\bin\Debug\WPF.pdb
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\bin\Debug\Netil.dll
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\bin\Debug\Netil.pdb
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF.csprojResolveAssemblyReference.cache
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\App.g.cs
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\MainWindow.g.cs
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF_MarkupCompile.cache
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF_MarkupCompile.lref
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\App.baml
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\MainWindow.baml
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF.g.resources
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF.Properties.Resources.resources
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF.csproj.GenerateResource.Cache
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF.dll
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF.pdb

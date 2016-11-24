@@ -1,0 +1,9 @@
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\bin\Debug\Netil.dll
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\bin\Debug\Netil.pdb
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\obj\Debug\MainWin.csprojResolveAssemblyReference.cache
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\obj\Debug\MainWin.Mono.NetilMono.resources
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\obj\Debug\MainWin.csproj.GenerateResource.Cache
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\bin\Debug\MainWin.exe
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\bin\Debug\MainWin.pdb
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\obj\Debug\MainWin.exe
+F:\Documents\Visual Studio 2015\Projects\Netil\MainWin\obj\Debug\MainWin.pdb
