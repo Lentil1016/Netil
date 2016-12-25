@@ -23,7 +23,7 @@ namespace Netil
             StringHelper.Pre_Proc(Pre_Feature);
             StringHelper.Pre_Proc(GroupName);
             StringHelper.Pre_Proc(Post_Feature);
-            return new Regex(Pre_Feature + "(?<" + GroupName + ">.*?)" + Post_Feature);
+            return new Regex("(?<="+Pre_Feature + ")(?<" + GroupName + ">.*?)(?=" + Post_Feature+")");
         }
 
         #endregion

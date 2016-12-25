@@ -17,9 +17,16 @@ namespace WPF
     public partial class MainWindow : Window
     {
         private core Core = new core();
+        private List<RuleControl> CtrlList = new List<RuleControl>();
         public MainWindow()
         {
             InitializeComponent();
+
+            //测试控件添加和删除
+            //TODO：封装stackpanel控件的添加和删除
+            CtrlList.Add(new RuleControl());
+            RuleCtrlPanel.Children.Add(CtrlList[0]);
+            RuleCtrlPanel.Children.Remove(CtrlList[0]);
         }
 
         /// <summary>
@@ -123,6 +130,11 @@ namespace WPF
         #endregion
 
         private void PipeLine_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void AddRuleBox_Click(object sender, RoutedEventArgs e)
         {
 
         }

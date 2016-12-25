@@ -9,3 +9,4 @@ F:\Documents\Visual Studio 2015\Projects\Netil\Main\obj\Debug\Main.MonoWin.Mono.
 F:\Documents\Visual Studio 2015\Projects\Netil\Main\obj\Debug\Main.csproj.GenerateResource.Cache
 F:\Documents\Visual Studio 2015\Projects\Netil\Main\obj\Debug\Main.exe
 F:\Documents\Visual Studio 2015\Projects\Netil\Main\obj\Debug\Main.pdb
+F:\Documents\Visual Studio 2015\Projects\Netil\Main\obj\Debug\Main.MonoWin.规则编辑器.resources

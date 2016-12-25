@@ -19,6 +19,15 @@
         <Style TargetType="GroupBox">
             <Setter Property="Margin" Value="5"></Setter>
         </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Margin" Value="5"></Setter>
+        </Style>
+        <Style TargetType="RichTextBox">
+            <Setter Property="Margin" Value="5"></Setter>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5"></Setter>
+        </Style>
     </Window.Resources>
 
     <Window.Background>
@@ -96,48 +105,30 @@
         </GroupBox>
 
         <Grid Name="MainPanelGrid" Height="494" VerticalAlignment="Bottom">
-            <Grid.Resources>
-                <Style TargetType="ListBox">
-                    <Setter Property="Margin" Value="5"></Setter>
-                </Style>
-            </Grid.Resources>
             <Grid.RowDefinitions>
                 <RowDefinition Height="4*"/>
                 <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
-            <GroupBox Name="DowloadGroup" Header="下载设置" Grid.ColumnSpan="2" Grid.Row="0" Margin="5">
+            <GroupBox Name="DowloadGroup" Header="下载设置" Grid.RowSpan="2" Grid.Column="1" Margin="5">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="140"/>
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
-                    <ListView Name="PipeLineBox" Margin="5" Grid.ColumnSpan="3" SelectionChanged="PipeLine_SelectionChanged">
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top"/>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                    </ListView>
-                    <Button x:Name="AddFTPRule" Content="添加文件保存规则" Margin="5" Height="20" Grid.Row="1" Grid.Column="2"/>
-                    <Button x:Name="AddInfRule" Content="添加字符串保存规则" Margin="5" Height="20" Grid.Row="1" Grid.Column="1"/>
+                    <StackPanel Name="RuleCtrlPanel" Orientation="Vertical" Background="White"/>
+                    <Button Name="AddRuleBox" Content="添加规则" Grid.Row="1" Click="AddRuleBox_Click"></Button>
                 </Grid>
             </GroupBox>
-            <GroupBox Name="UrlListGroup" Header="已解析的Url"  Grid.Column="0" Grid.Row="1">
-                <ListBox Background="#b1dffd"></ListBox>
+            <GroupBox Name="UrlListGroup" Header="已爬取的网址"  Grid.Column="0" Grid.Row="1">
+                <TextBox Background="#b1dffd"></TextBox>
             </GroupBox>
-            <GroupBox Name="ImgListGroup" Header="已下载的文件"  Grid.Column="1" Grid.Row="1">
-                <ListBox Background="#b1dffd"></ListBox>
+            <GroupBox Name="ImgListGroup" Header="消息记录"  Grid.Column="0" Grid.Row="0">
+                <RichTextBox Background="#b1dffd"></RichTextBox>
             </GroupBox>
         </Grid>
-
     </Grid>
 </Window>

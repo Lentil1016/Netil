@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Netil;
+using System.ComponentModel;
+using Netil.Helper;
 
 namespace Main.MonoWin
 {
@@ -16,7 +11,9 @@ namespace Main.MonoWin
         private core Core=new core();
         public Mono()
         {
+            
             InitializeComponent();
+
         }
 
         private void label1_Click(object sender, EventArgs e)

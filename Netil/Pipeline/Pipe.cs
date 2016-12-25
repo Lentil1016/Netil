@@ -79,7 +79,7 @@ namespace Netil.Pipeline
                         foreach(var Rule in MsgRules)//使用每条正则表达式对content进行匹配
                         {
                             foreach (Match match in Rule.Value.Matches(content))
-                                thread_stash[Rule.Key].Add(HttpHelper.CheckUrl(match.Groups[Rule.Key].Value,Url));//将每条匹配中的目标数据存入stash
+                                thread_stash[Rule.Key].Add(HttpHelper.CheckUrl(match.Value,Url));//将每条匹配中的目标数据存入stash
                         }
 
                         //下载文件阶段
@@ -90,7 +90,12 @@ namespace Netil.Pipeline
                                     StringHelper.FilenameParser(Rule.Value, counter, thread_stash)) ;
 
                         //保存数据表阶段
+                        string FileName;
+                        foreach (var Rule in FileRules)
+                        {
+                            FileName = StringHelper.FilenameParser(Rule.Key, 0, thread_stash);
 
+                        }
                     }
                 }
             }
@@ -127,8 +132,9 @@ namespace Netil.Pipeline
         #endregion
 
         #region variables
-        private object QueueLocker = new object();//订单队列锁
-        private Queue<string> OrderQueue = new Queue<string>();//订单队列
+        private object QueueLocker = new object();//待处理订单队列锁
+        private Queue<string> OrderQueue = new Queue<string>();//待处理订单队列
+
 
         private int WorkerCount;//并行子线程数
 
@@ -138,8 +144,8 @@ namespace Netil.Pipeline
 
         private Dictionary<bool, Regex> CheckRules;//key为逻辑标识符，ture为存在匹配时通过，false为不存在匹配时通过，value为匹配表达式
         private Dictionary<string, Regex> MsgRules;//key为数据包所在Group名，value为提取Group所用正则表达式
-        private Dictionary<string, List<string>> FileRules;//key为文件保存路径文件名表达式，value为文件内包含数据包清单 
         private Dictionary<string, string> DownloadRules;//Key为Url数据包，value为保存路径文件名表达式
+        private Dictionary<string, List<string>> FileRules;//key为文件保存路径文件名表达式，value为文件内包含数据包清单 
 
         private object StationLock=new object();
         private Dictionary<string, List<string>> DataStation=new Dictionary<string, List<string>>();//用于保存该pipe段本身产出的数据资源

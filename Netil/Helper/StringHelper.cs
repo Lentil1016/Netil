@@ -19,36 +19,43 @@ namespace Netil.Helper
         /// <returns></returns>
         public static string FilenameParser(string path,int counter,Dictionary<string,List<string>> stash)
         {
-            foreach (Match match in PackRegex.Matches(path))
-                path.Replace(match.Value, stash[match.Groups[1].Value][counter]);
-            return path;
+            try
+            {
+                foreach (Match match in PackRegex.Matches(path))
+                    path.Replace(match.Value, stash[match.ToString()][counter]);
+                return path;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         /// <summary>
-        /// 字符串转化为正则表达式前的前处理
+        /// 字符串转化为正则表达式
         /// </summary>
         /// <param name="str">待处理的字符串</param>
         /// <returns>处理完成的字符串</returns>
         public static string Pre_Proc(string str)
         {
-            if (ConfigReg.IsMatch(str))
+            if (ConfigReg.IsMatch(str))//判断用户输入的是否是正则表达式
             {
-                return ConfigReg.Match(str).Groups["RegExp"].Value;
+                return ConfigReg.Match(str).Value;//直接返回正则表达式
             }
             else
             {
-                var matches = ConfigStr.Matches(str) ;
+                var matches = ConfigStr.Matches(str) ;//通过在每个符号前加字符"\"将字符串转换为正则表达式
                 for (int counter=matches.Count-1;counter>=0;counter--)
-                    str.Insert(matches[counter].Index,"\\");
+                    str.Insert(matches[counter].Index,@"\");
                 return str;
             }
         }
         #endregion
 
         #region variable
-        private static Regex PackRegex = new Regex("\":(.*?)\"");
+        private static Regex PackRegex = new Regex("(?<=\":).*?(?=\")");
         private static Regex ConfigStr = new Regex(@"[^\s\d\w]");
-        private static Regex ConfigReg = new Regex(@"^\/(?<RegExp>.*)\/g$");
+        private static Regex ConfigReg = new Regex(@"(?<=^\/).*(?=\/g$)");
         #endregion
     }
 }

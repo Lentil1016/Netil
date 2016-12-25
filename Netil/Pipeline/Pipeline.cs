@@ -6,19 +6,14 @@ using System.Threading.Tasks;
 using System.Threading;
 
 /*pipeline主要负责调度工作(多播委托、布隆过滤)，而各段pipe只负责数据的下载和提取操作
+ * 仅当排队的订单全部处理完后，才会调用pipeline传入的委托从pipeline提取现有订单
  * 也即pipe就像工厂中的工位，只负责根据给定的规则进行数据生产
- * 而pipeline就像工厂中的物流系统，负责为pipe下达生产任务，并将pipe产出的数据资源进行再分配。
+ * 而pipeline就像工厂中的物流系统，负责为pipe下达生产任务，并将pipe产出的数据资源进行再分配
  * pipe通过queue接收订单，通过调用委托送回产品
 */
 
 namespace Netil.Pipeline
 {
-
-    #region delegates
-    delegate void enqueue_handle(List<string> EnqueueOrders);
-    delegate void enqueue_index_handle(string EnqueueKey,List<string> EnqueueOrders );
-    #endregion
-
     class pipeline
     {
         #region constructor
@@ -38,18 +33,22 @@ namespace Netil.Pipeline
             NewPipe.Online(EnqueueDictHandle);//为传入的新Pipe添加订单分发函数的委托
             _pipeline.Add(NewPipe);
         }
-
+        
         /// <summary>
-        /// 构造多播委托
+        /// 构造多播委托，Pipeline对象在各pipe处理订单时依靠该多播委托实时拉回和传递订单。
         /// </summary>
-        /// <param name="RequestList">各个pipe所请求的订单名PackName</param>
-        public void Pre_Operating(List<string> RequestList)
+        /// <param name="RequestList">各个pipe所请求的订单名(PackName)</param>
+        /// <param name="ReturnList">各个pipe所产出的订单名(PackName)</param>
+        public void Pre_Operating(List<string> RequestList, List<List<string>> ReturnList)
         {
             var DistList = RequestList.Distinct();//创建一个无重复版本的RequestList
             foreach (string Name in DistList)
                 EnqueueHandlesDict[Name] = new enqueue_handle(PreDelegate);//添加多重委托前需要初始化委托，这里使用一个无用的空函数
             for (int i=0;i<RequestList.Count;i++)
+            {
                 EnqueueHandlesDict[RequestList[i]] += _pipeline[i].Enqueue;//将RequestList中元素对应的Pipe的Dequeue方法添加进多重委托
+
+            }
             foreach (string Name in DistList)
                 EnqueueHandlesDict[Name] -= PreDelegate;//将初始化构造用的空函数去掉
         }
@@ -116,8 +115,9 @@ namespace Netil.Pipeline
         #endregion
 
         #region variables
-        private enqueue_index_handle EnqueueDictHandle;//订单分发函数委托
-        private Dictionary<string, enqueue_handle> EnqueueHandlesDict=new Dictionary<string, enqueue_handle>();//分发委托字典
+        private Netil.Helper.enqueue_index_handle EnqueueDictHandle;//订单分发函数委托
+        private Dictionary<string, Netil.Helper.enqueue_handle> EnqueueHandlesDict=new Dictionary<string, Netil.Helper.enqueue_handle>();//分发委托字典
+        //分发委托字典如其名，每个pair中，订单名对应请求该类型订单的分发函数委托。
 
         private List<Pipe> _pipeline=new List<Pipe>();//生产管线
 

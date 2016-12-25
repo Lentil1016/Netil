@@ -28,3 +28,5 @@ F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF.Properties.Reso
 F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF.csproj.GenerateResource.Cache
 F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF.dll
 F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\WPF.pdb
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\RuleControl.g.cs
+F:\Documents\Visual Studio 2015\Projects\Netil\WPF\obj\Debug\RuleControl.baml

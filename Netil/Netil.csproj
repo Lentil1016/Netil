@@ -59,6 +59,8 @@
   <ItemGroup>
     <Compile Include="core.cs" />
     <Compile Include="Helper\BloomFilter.cs" />
+    <Compile Include="Helper\Delegates.cs" />
+    <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Helper\HttpHelper.cs" />
     <Compile Include="Helper\InformHelper.cs" />
     <Compile Include="Pipeline\Pipe.cs" />
